@@ -50,7 +50,7 @@ public class FlickrFetchr {
         return new String(getUrlBytes(urlSpec));
     }
 
-    public List<GalleryItem> fetchItems() {
+    public List<GalleryItem> fetchItems(int pageNumber) {
         List<GalleryItem> items = new ArrayList<>();
         try {
             String url = Uri.parse("https://api.flickr.com/services/rest/")
@@ -60,10 +60,16 @@ public class FlickrFetchr {
                     .appendQueryParameter("format", "json")
                     .appendQueryParameter("nojsoncallback", "1")
                     .appendQueryParameter("extras", "url_s")
+                    .appendQueryParameter("page",String.valueOf(pageNumber))
                     .build().toString();
             String jsonString = getUrlString(url);
             Log.i(TAG, "Received JSON: " + jsonString);
             JSONObject jsonBody = new JSONObject(jsonString);
+//            Gson mGsonobj = new Gson();
+//            Type collectionType = new TypeToken<List<GalleryItem>>(){}.getType();
+//            items = mGsonobj.fromJson(jsonString,collectionType);
+
+
             parseItems(items,jsonBody);
         } catch (JSONException je) {
             Log.e(TAG,"Failed to parse JSON", je);
