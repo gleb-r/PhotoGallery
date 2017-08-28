@@ -1,5 +1,6 @@
 package com.example.gleb.photogallery;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -42,6 +43,8 @@ public class PhotoGalleryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         new FetchItemsTask().execute();
+        Intent intent = PollService.newIntent(getActivity());
+        getActivity().startService(intent);
         Handler responseHandler = new Handler();
         mThumbnailDownloader = new ThumbnailDownloader<>(responseHandler);
         mThumbnailDownloader.setThumbnailDownloadListener(new ThumbnailDownloadListener<PhotoHolder>() {
