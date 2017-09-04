@@ -1,6 +1,5 @@
 package com.example.gleb.photogallery;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -46,7 +45,7 @@ public class PhotoGalleryFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_clear:
-                QueryPrefernces.setStoredQuery(getActivity(), null);
+                QueryPreferences.setStoredQuery(getActivity(), null);
                 updateItems();
                 return true;
             default:
@@ -65,7 +64,7 @@ public class PhotoGalleryFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d(TAG, "QueryTextSubmit: " + query);
-                QueryPrefernces.setStoredQuery(getActivity(), query);
+                QueryPreferences.setStoredQuery(getActivity(), query);
                 updateItems();
                 return true;
             }
@@ -79,7 +78,7 @@ public class PhotoGalleryFragment extends Fragment {
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String query = QueryPrefernces.getStoredQuery(getActivity());
+                String query = QueryPreferences.getStoredQuery(getActivity());
                 searchView.setQuery(query,false);
             }
         });
@@ -87,7 +86,7 @@ public class PhotoGalleryFragment extends Fragment {
 
 
     private void updateItems() {
-        String query = QueryPrefernces.getStoredQuery(getActivity());
+        String query = QueryPreferences.getStoredQuery(getActivity());
         new FetchItemsTask(query).execute();
     }
 
@@ -98,8 +97,7 @@ public class PhotoGalleryFragment extends Fragment {
         setRetainInstance(true);
         setHasOptionsMenu(true);
         updateItems();
-        Intent intent = PollService.newIntent(getActivity());
-        getActivity().startService(intent);
+        PollService.setServiceAlarm(getActivity(),true);
         Handler responseHandler = new Handler();
         mThumbnailDownloader = new ThumbnailDownloader<>(responseHandler);
         mThumbnailDownloader.setThumbnailDownloadListener(new ThumbnailDownloadListener<PhotoHolder>() {
